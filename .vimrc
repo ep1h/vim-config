@@ -19,11 +19,13 @@ function! GitBlameCurrentLine()
   echom l:blame_info
 endfunction"
 
+
 " Clang-format ---------------------------------------------------------------
 nnoremap <Leader>cff :call FormatCurrentFile()<CR>
-function! FormatCurrentFile()
-    let l:cursor_pos = getpos('.')
-    let l:clang_format_style = '{' .
+vnoremap <Leader>cfv :call FormatSelection()<CR>
+
+function! GetClangFormatStyle()
+    return '{' .
                 \ '"Language": "Cpp",' .
                 \ '"BasedOnStyle": "Microsoft",' .
                 \ '"UseTab": "Never",' .
@@ -37,8 +39,20 @@ function! FormatCurrentFile()
                 \ '"AccessModifierOffset": -4,' .
                 \ '"IndentExternBlock": "NoIndent"' .
                 \ '}'
+endfunction
+
+" Function to format the current file -----------------------------------------
+function! FormatCurrentFile()
+    let l:cursor_pos = getpos('.')
+    let l:clang_format_style = GetClangFormatStyle()
     execute ':%!clang-format -style=' . shellescape(l:clang_format_style)
     call setpos('.', l:cursor_pos)
+endfunction
+
+" Function to format selected text --------------------------------------------
+function! FormatSelection()
+    let l:clang_format_style = GetClangFormatStyle()
+    execute ":'<,'>!clang-format -style=" . shellescape(l:clang_format_style)
 endfunction
 
 " Terminal Split -------------------------------------------------------------

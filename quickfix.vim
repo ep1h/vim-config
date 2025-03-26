@@ -64,4 +64,3 @@ function! QuickFixAutoPreview()
         endif
     endif
 endfunction
-

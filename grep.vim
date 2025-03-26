@@ -5,34 +5,22 @@ nnoremap \sa :call GrepText()<CR>
 nnoremap \sf :call GrepFileName()<CR>
 
 let g:has_rg = executable('rg')
-let g:grep_ignore_list = ['.git', 'cscope.out', 'tags', '*.c.sav', '*.u', '*.pem']
+let g:grep_ignore_list = ['Doxyfile', '.git', 'cscope.out', 'tags', '*.c.sav', '*.u', '*.pem']
 
 function! BuildIgnoreParams()
-    let l:ignore_params = []
-    for ignore in g:grep_ignore_list
-        if g:has_rg
-            call add(l:ignore_params, "--glob '!". ignore . "'")
-        else
-            call add(l:ignore_params, "--exclude=" . ignore)
-        endif
-    endfor
-    return join(l:ignore_params, ' ')
+    return join(map(copy(g:grep_ignore_list), { _, v -> g:has_rg ? "--glob '!". v . "'" : "--exclude=". v }), ' ')
 endfunction
 
 function! BuildGrepTextCommand(pattern)
-    if g:has_rg
-        return "rg --vimgrep --hidden " . BuildIgnoreParams() . " " . shellescape(a:pattern)
-    else
-        return "grep -rnI " . BuildIgnoreParams() . " " . shellescape(a:pattern) . " ."
-    endif
+    return g:has_rg
+        \ ? "rg --vimgrep --hidden " . BuildIgnoreParams() . " " . shellescape(a:pattern)
+        \ : "grep -rnI " . BuildIgnoreParams() . " " . shellescape(a:pattern) . " ."
 endfunction
 
 function! BuildGrepFilesCommand(pattern)
-    if g:has_rg
-        return "rg --files -g '*" . a:pattern . "*' --hidden"
-    else
-        return "find . -type f -name '*" . a:pattern . "*'"
-    endif
+    return g:has_rg
+        \ ? "rg --files -g '*" . a:pattern . "*' --hidden"
+        \ : "find . -type f -name '*" . a:pattern . "*'"
 endfunction
 
 function! GrepText()
@@ -41,8 +29,7 @@ function! GrepText()
         echo "No pattern entered"
         return
     endif
-    let l:command = BuildGrepTextCommand(l:pattern)
-    let l:results = systemlist(l:command)
+    let l:results = systemlist(BuildGrepTextCommand(l:pattern))
     if empty(l:results)
         echo "No matches found"
         return

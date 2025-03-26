@@ -62,4 +62,3 @@ function! FzfGrepOpen(selected)
     execute 'e ' . filename
     execute line
 endfunction
-

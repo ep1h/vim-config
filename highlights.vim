@@ -38,6 +38,8 @@ highlight qfFileName    ctermfg=LightGreen
 highlight Search ctermbg=DarkCyan
 highlight CurSearch ctermbg=Red
 
+highlight Directory ctermfg=DarkCyan
+
 augroup custom_syntax_highlights
   autocmd!
   autocmd FileType c,cpp,objc,objcpp,java,lua call ApplySyntax()

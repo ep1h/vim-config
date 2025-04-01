@@ -4,7 +4,3 @@ source ~/.vim-config/quickfix.vim
 source ~/.vim-config/utils.vim
 source ~/.vim-config/vim_fzf.vim
 source ~/.vim-config/vim_cscope.vim
-call plug#begin('~/.vim/plugged')
-Plug 'preservim/nerdtree'
-call plug#end()
-nmap <Leader>n :NERDTreeToggle<CR>

@@ -1,6 +1,6 @@
 #!/bin/bash
-git clone https://github.com/ep1h/vim-config.git ~/vim-config
-cp ~/vim-config/.vimrc ~/
+git clone https://github.com/ep1h/vim-config.git ~/.vim-config
+mv ~/.vim-config/.vimrc ~/
 "curl -fLm ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 curl -f -L -m 10 --create-dirs -o ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim 
 sudo dnf install epel-release

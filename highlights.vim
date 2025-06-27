@@ -42,11 +42,12 @@ highlight Directory ctermfg=DarkCyan
 
 augroup custom_syntax_highlights
   autocmd!
-  autocmd FileType c,cpp,objc,objcpp,java,lua call ApplySyntax()
+  autocmd FileType c,cpp,objc,objcpp,java,lua call ApplySyntaxC()
+  autocmd FileType rust call ApplySyntaxRust()
   autocmd BufRead,BufNewFile *.y,*.l set filetype=c
 augroup END
 
-function ApplySyntax()
+function ApplySyntaxC()
     syntax cluster cPreProcGroup add=cCustomFunc
     syntax match cCustomFunc "\w\+\ze\s*("
     syntax match cCustomFuncPtr "[( \t*]*\i\+[) \t*]*\[.\+\][) \t]*\ze("
@@ -56,11 +57,18 @@ function ApplySyntax()
     syntax match cCustomTypeCast "\(\%(\w\+\)\s*\)\@<!(\(\s*\w\+[ \t*]*\)\+)\ze[ \t*)(]*\i"
     highlight link cCustomType Type
     highlight link cCustomTypeCast Type
-
-
     highlight link cCustomFuncPtr cCustomFunc
     highlight cCustomFunc     ctermfg=LightYellow
 endfunction
+
+function ApplySyntaxRust()
+    highlight rustFuncName ctermfg=LightYellow
+    highlight rustFuncCall ctermfg=LightYellow
+    highlight link rustOperator Normal
+    highlight link rustIdentifier Normal
+    highlight link rustModPathSep Normal
+endfunction
+
 
 " Invisible characters -------------------------------------------------------
 :au InsertEnter * set list

@@ -1,3 +1,4 @@
+
 " Quickfix -------------------------------------------------------------------
 
 " autocmd CursorMoved * call s:QuickFixAutoPreview()
@@ -64,3 +65,4 @@ function! QuickFixAutoPreview()
         endif
     endif
 endfunction
+

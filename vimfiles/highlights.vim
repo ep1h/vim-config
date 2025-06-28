@@ -1,3 +1,6 @@
+" colorscheme vim
+"set notermguicolors
+
 syntax on
 colorscheme default
 set number
@@ -13,32 +16,38 @@ set wildmenu
 set incsearch
 set hlsearch
 
-highlight Normal        ctermfg=LightGray
-highlight Statement     ctermfg=DarkCyan
-highlight NonText       ctermfg=DarkGray
-highlight SpecialKey    ctermfg=DarkGrey
-highlight Comment       ctermfg=DarkGrey
-highlight LineNr        ctermfg=DarkGrey
-highlight CursorLineNr  ctermfg=Black       ctermbg=LightGrey
-highlight Type          ctermfg=DarkCyan
-highlight Number        ctermfg=LightGreen
-highlight String        ctermfg=LightGreen
-highlight Character     ctermfg=LightGreen
-highlight Special       ctermfg=Green
-highlight Boolean       ctermfg=DarkCyan
-highlight Label         ctermfg=Red
-highlight Constant      ctermfg=Magenta
+highlight Normal guibg=#1E1E1E
+highlight Normal        guifg=#D4D4D4
+highlight Statement     guifg=#569CD6
+highlight NonText       guifg=#A9A9A9
+highlight SpecialKey    guifg=#00FF00
+highlight Comment       guifg=#6A9955
+highlight LineNr        guifg=#A9A9A9
+highlight CursorLineNr  guifg=#000000 guibg=#D3D3D3
+highlight Type          guifg=#569CD6
+highlight Number        guifg=#B5CEA8
+highlight String        guifg=#CE9178
+highlight Character     guifg=#90EE90
+highlight Special       guifg=#D7BA7D
+highlight Boolean       guifg=#008B8B
+highlight Label         guifg=#FF0000
+highlight Constant      guifg=#C586C0
 
-highlight StatusLine    ctermfg=Blue        ctermbg=LightGray
-highlight Search        ctermfg=Black ctermbg=Cyan
-highlight IncSearch     gui=reverse cterm=reverse gui=reverse
+highlight StatusLine    guifg=#0000FF guibg=#D3D3D3
+highlight Search        guifg=#000000 guibg=#00FFFF
+highlight IncSearch     gui=reverse cterm=reverse guifg=NONE guibg=NONE
 
-highlight qfFileName    ctermfg=LightGreen
+highlight qfFileName    guifg=#90EE90
 
-highlight Search ctermbg=DarkCyan
-highlight CurSearch ctermbg=Red
+highlight Search        guibg=#008B8B
+highlight CurSearch     guibg=#FF0000
 
-highlight Directory ctermfg=DarkCyan
+highlight Directory     guifg=#008B8B
+highlight PreProc       guifg=#569CD6
+
+highlight Todo          guifg=#009900
+highlight Func          guifg=#DCDCAA
+
 
 augroup custom_syntax_highlights
   autocmd!
@@ -58,12 +67,12 @@ function ApplySyntaxC()
     highlight link cCustomType Type
     highlight link cCustomTypeCast Type
     highlight link cCustomFuncPtr cCustomFunc
-    highlight cCustomFunc     ctermfg=LightYellow
+    highlight link cCustomFunc    Func 
 endfunction
 
 function ApplySyntaxRust()
-    highlight rustFuncName ctermfg=LightYellow
-    highlight rustFuncCall ctermfg=LightYellow
+    highlight link rustFuncName Func
+    highlight link rustFuncCall Func
     highlight link rustOperator Normal
     highlight link rustIdentifier Normal
     highlight link rustModPathSep Normal

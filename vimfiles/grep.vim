@@ -57,4 +57,3 @@ function! GrepFileName()
     execute "vertical " . (winwidth(0) / 2) . " cwindow"
     "cwindow
 endfunction
-

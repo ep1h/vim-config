@@ -57,3 +57,6 @@ function! FormatSelection()
     execute ":'<,'>!clang-format -style=" . shellescape(l:clang_format_style)
 endfunction
 
+" WSL Clipboard --------------------------------------------------------------
+vnoremap <C-c> y:!echo <C-r>=escape(substitute(shellescape(getreg('"')), '\n', '\r', 'g'), '#%!')<CR> <Bar> clip.exe<CR><CR>
+

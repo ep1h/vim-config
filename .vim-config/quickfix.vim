@@ -13,7 +13,22 @@ nnoremap <leader>ssf :call QuickfixDoubleSearch('filename', 0)<CR>
 nnoremap <leader>sns :call QuickfixDoubleSearch('content', 1)<CR>
 nnoremap <leader>snf :call QuickfixDoubleSearch('filename', 1)<CR>
 
-" TODO: Implement logic to undo previous sss/ssf/sns/snf
+" Undo previous quickfix filter
+nnoremap <leader>su :call QuickfixUndoFilter()<CR>
+
+" Quickfix filter history stack
+let s:qf_history = []
+
+function! QuickfixUndoFilter()
+    if empty(s:qf_history)
+        echo "No quickfix filter history to undo."
+        return
+    endif
+    let l:prev = remove(s:qf_history, -1)
+    call setqflist(l:prev)
+    copen
+    echo "Quickfix list restored. (" . len(s:qf_history) . " undo states remaining)"
+endfunction
 
 function! QuickfixDoubleSearch(type, invert)
     " Prompt for search pattern with a default hint
@@ -33,6 +48,9 @@ function! QuickfixDoubleSearch(type, invert)
 
     " Prepare the filter pattern based on invert flag
     let l:match_operator = a:invert ? '!~' : '=~'
+
+    " Save current quickfix list to history for undo
+    call add(s:qf_history, copy(l:current_qflist))
 
     " Filter by content or filename
     if a:type == 'content'

@@ -19,7 +19,7 @@ function! FzfListAllFiles()
     call fzf#run(fzf#wrap({
         \ 'source': command,
         \ 'sink': 'e',
-        \ 'options': '--preview "cat {}"'
+        \ 'options': '--preview "head -80 {}"'
         \ }))
 endfunction
 
@@ -29,9 +29,8 @@ function! FzfListAllTags()
         return
     endif
     call fzf#run(fzf#wrap({
-        \ 'source': 'cat tags | cut -f1',
+        \ 'source': 'cat tags | grep -v "^!" | cut -f1 | sort -u',
         \ 'sink': 'tjump',
-        \ 'options': '--preview "cat {}"'
         \ }))
 endfunction
 
@@ -51,14 +50,16 @@ function! FzfGrepAll()
     call fzf#run(fzf#wrap({
         \ 'source': command,
         \ 'sink': function('FzfGrepOpen'),
-        \ 'options': '--preview "cat {}"'
+        \ 'options': '--delimiter : --preview "head -80 {1}"'
         \ }))
 endfunction
 
 function! FzfGrepOpen(selected)
-    let parts = split(a:selected, ':')
-    let filename = parts[0]
-    let line = parts[1]
-    execute 'e ' . filename
-    execute line
+    let l:m = matchlist(a:selected, '^\(.\{-}\):\(\d\+\):')
+    if empty(l:m)
+        echo "Could not parse: " . a:selected
+        return
+    endif
+    execute 'e ' . fnameescape(l:m[1])
+    execute l:m[2]
 endfunction

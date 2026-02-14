@@ -30,13 +30,11 @@ highlight Label         ctermfg=Red
 highlight Constant      ctermfg=Magenta
 
 highlight StatusLine    ctermfg=Blue        ctermbg=LightGray
-highlight Search        ctermfg=Black ctermbg=Cyan
-highlight IncSearch     gui=reverse cterm=reverse gui=reverse
+highlight Search        ctermbg=DarkCyan
+highlight IncSearch     gui=reverse cterm=reverse
+highlight CurSearch     ctermbg=Red
 
 highlight qfFileName    ctermfg=LightGreen
-
-highlight Search ctermbg=DarkCyan
-highlight CurSearch ctermbg=Red
 
 highlight Directory ctermfg=DarkCyan
 
@@ -47,7 +45,7 @@ augroup custom_syntax_highlights
   autocmd BufRead,BufNewFile *.y,*.l set filetype=c
 augroup END
 
-function ApplySyntaxC()
+function! ApplySyntaxC()
     syntax cluster cPreProcGroup add=cCustomFunc
     syntax match cCustomFunc "\w\+\ze\s*("
     syntax match cCustomFuncPtr "[( \t*]*\i\+[) \t*]*\[.\+\][) \t]*\ze("
@@ -61,7 +59,7 @@ function ApplySyntaxC()
     highlight cCustomFunc     ctermfg=LightYellow
 endfunction
 
-function ApplySyntaxRust()
+function! ApplySyntaxRust()
     highlight rustFuncName ctermfg=LightYellow
     highlight rustFuncCall ctermfg=LightYellow
     highlight link rustOperator Normal
@@ -71,6 +69,9 @@ endfunction
 
 
 " Invisible characters -------------------------------------------------------
-:au InsertEnter * set list
-:au InsertLeave * set nolist
-:set listchars=eol:$,tab:>·,trail:·,extends:>,precedes:<,space:·
+augroup invisible_chars
+  autocmd!
+  autocmd InsertEnter * set list
+  autocmd InsertLeave * set nolist
+augroup END
+set listchars=eol:$,tab:>·,trail:·,extends:>,precedes:<,space:·

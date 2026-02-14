@@ -35,7 +35,7 @@ function! Cscope_ShowHelp()
     echo "Cscope Key Bindings:"
     echo "  \\Cscan Analyze current dir recursively"
     echo "  \\Cs    Find this C symbol"
-    echo "  \\Cg    Find gloval definition"
+    echo "  \\Cg    Find global definition"
     echo "  \\Cd    Find functions called by this function"
     echo "  \\Cc    Find functions calling this function"
     echo "  \\Ct    Find this text string"
@@ -64,9 +64,15 @@ function! Cscope_IsSubset(small_stack, big_stack)
 endfunction
 
 
-function! Cscope_RecursiveCallsSearch(name, depth, max_depth, current_stack, all_callstacks, search_type, cache)
+function! Cscope_RecursiveCallsSearch(name, depth, max_depth, current_stack, all_callstacks, search_type, cache, visited)
     " Stop recursion if depth limit is reached
     if a:depth >= a:max_depth
+        call add(a:all_callstacks, copy(a:current_stack))
+        return
+    endif
+
+    " Cycle detection: skip if already in current call stack
+    if index(map(copy(a:current_stack), 'v:val.function'), a:name) >= 0
         call add(a:all_callstacks, copy(a:current_stack))
         return
     endif
@@ -105,7 +111,7 @@ function! Cscope_RecursiveCallsSearch(name, depth, max_depth, current_stack, all
             call add(a:current_stack, l:call_info)
             let l:next_function_name = l:parts[1]
             " Recursively process the next function
-            call Cscope_RecursiveCallsSearch(l:next_function_name, a:depth + 1, a:max_depth, a:current_stack, a:all_callstacks, a:search_type, a:cache)
+            call Cscope_RecursiveCallsSearch(l:next_function_name, a:depth + 1, a:max_depth, a:current_stack, a:all_callstacks, a:search_type, a:cache, a:visited)
             " Backtracking: remove the last function call after recursion
             call remove(a:current_stack, -1)
         endif
@@ -160,8 +166,9 @@ endfunction
 function! Cscope_BuildCallstacksTo(function_name, max_depth)
     let l:all_callstacks = []
     let l:current_stack = []
-    let s:cache = {}
-    call Cscope_RecursiveCallsSearch(a:function_name, 1, a:max_depth, l:current_stack, l:all_callstacks, 'to', s:cache)
+    let l:cache = {}
+    let l:visited = {}
+    call Cscope_RecursiveCallsSearch(a:function_name, 1, a:max_depth, l:current_stack, l:all_callstacks, 'to', l:cache, l:visited)
     " Filter the call stacks to remove redundant shorter ones
     let l:filtered_callstacks = Cscope_FilterCallStacks(l:all_callstacks)
     let l:callstacks = Cscope_AddTargetFunc(a:function_name, l:filtered_callstacks)
@@ -212,8 +219,8 @@ endfunction
 
 function! Cscope_BuildCallstacksFrom(function_name, max_depth)
     let l:callstack = []
-    let s:cache = {}
-    call Cscope_RecursiveCalleesSearch(a:function_name, 1, a:max_depth, l:callstack, s:cache)
+    let l:cache = {}
+    call Cscope_RecursiveCalleesSearch(a:function_name, 1, a:max_depth, l:callstack, l:cache)
     return l:callstack
 endfunction
 

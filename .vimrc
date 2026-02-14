@@ -5,15 +5,12 @@ source ~/.vim-config/utils.vim
 source ~/.vim-config/vim_fzf.vim
 source ~/.vim-config/vim_cscope.vim
 
-
-
-
 " Git ------------------------------------------------------------------------
 
 function! GitBlameCurrentLine()
   let l:line = line(".")
   let l:file = expand("%:p")
-  let l:blame_info = system('git blame -L ' . line(".") . ',' . l:line . ' -- ' . shellescape(expand("%:p")) . ' --date=iso')
+  let l:blame_info = system('git blame -L ' . l:line . ',' . l:line . ' -- ' . shellescape(l:file) . ' --date=iso')
   echom l:blame_info
 endfunction
 nnoremap <leader>gb :call GitBlameCurrentLine()<CR>

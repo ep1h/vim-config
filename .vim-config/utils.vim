@@ -8,7 +8,7 @@ nnoremap <leader>terma :call SpawnLocalTerm('left')<CR>
 nnoremap <leader>terms :call SpawnLocalTerm('bottom')<CR>
 nnoremap <leader>termd :call SpawnLocalTerm('right')<CR>
 
-function SpawnLocalTerm(position)
+function! SpawnLocalTerm(position)
     let current_directory = expand('%:p:h')
     if a:position == "top"
         topleft term
@@ -19,7 +19,7 @@ function SpawnLocalTerm(position)
     elseif a:position == "right"
         rightbelow vert term
     endif
-    "resize 10
+    execute 'lcd ' . fnameescape(current_directory)
 endfunction
 
 " Clang-format 
@@ -58,5 +58,7 @@ function! FormatSelection()
 endfunction
 
 " WSL Clipboard --------------------------------------------------------------
-vnoremap <C-c> y:!echo <C-r>=escape(substitute(shellescape(getreg('"')), '\n', '\r', 'g'), '#%!')<CR> <Bar> clip.exe<CR><CR>
+if has('wsl') || exists('$WSL_DISTRO_NAME')
+    vnoremap <C-c> y:!echo <C-r>=escape(substitute(shellescape(getreg('"')), '\n', '\r', 'g'), '#%!')<CR> <Bar> clip.exe<CR><CR>
+endif
 

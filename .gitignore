@@ -1,0 +1,11 @@
+# Vim swap/backup/undo files
+*.swp
+*.swo
+*~
+.netrwhist
+
+# Tags and index files
+tags
+cscope.out
+cscope.in.out
+cscope.po.out
